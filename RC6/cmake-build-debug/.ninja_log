@@ -1,0 +1,6 @@
+# ninja log v5
+18	1111	7230790830499607	CMakeFiles/lab02.dir/analysis.cpp.obj	fb1502afd2a08b07
+2	1019	7236667019373481	CMakeFiles/lab02.dir/main.cpp.obj	c471dd4d09b59310
+1016	1155	7236675823513149	lab02.exe	4bbe2c0dfaa24cf3
+3	1016	7236675822161771	CMakeFiles/lab02.dir/Util.cpp.obj	f22717ede9b1c45c
+10	967	7230790829054080	CMakeFiles/lab02.dir/RC6.cpp.obj	d6b037b8ee6a1e27
