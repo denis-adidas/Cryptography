@@ -13,6 +13,8 @@
 class tiger {
 public:
     tiger(const char* str, uint64_t length);
+    uint64_t getHash(int size);
+    std::string getHashforPrint(const std::string& input);
     uint64_t* getRes();
 private:
     void save_abc();
@@ -21,7 +23,7 @@ private:
     void keySchedule();
     void feedForward();
     void compress();
-    void tiger_compress(uint64_t *str, uint64_t state[3]);
+    void tiger_compress(const uint64_t *str, uint64_t state[3]);
 private:
     uint64_t res[3]{};
     uint64_t state[3]{};

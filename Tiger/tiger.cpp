@@ -76,7 +76,7 @@ void tiger::compress() {
     feedForward();
 }
 
-void tiger::tiger_compress(uint64_t *str, uint64_t state[3]) {
+void tiger::tiger_compress(const uint64_t *str, uint64_t state[3]) {
     a = state[0];
     b = state[1];
     c = state[2];
@@ -134,6 +134,42 @@ tiger::tiger(const char* str, uint64_t length) {
 uint64_t* tiger::getRes() {
     return res;
 }
+
+std::string tiger::getHashforPrint(const std::string& input) {
+    const int bufferSize = 256;
+
+    char buffer[bufferSize];
+
+    snprintf(buffer, bufferSize,
+         "Hash of \"%s\":\n\t%08X%08X %08X%08X %08X%08X\n",
+         input.c_str(),
+         static_cast<uint32_t>(res[0] >> 32),
+         static_cast<uint32_t>(res[0]),
+         static_cast<uint32_t>(res[1] >> 32),
+         static_cast<uint32_t>(res[1]),
+         static_cast<uint32_t>(res[2] >> 32),
+         static_cast<uint32_t>(res[2]));
+
+    std::string resultString(buffer);
+    return resultString;
+}
+
+uint64_t tiger::getHash(int size) {
+    switch (size) {
+        case 8:
+            return (res[0] >> 32) + (res[0]);
+        case 10:
+            return (res[0] >> 32) + (res[0]) + (res[1] >> 32);
+        case 12:
+            return (res[0] >> 32) + (res[0]) + (res[1] >> 32) + res[1];
+        case 14:
+            return (res[0] >> 32) + (res[0]) + (res[1] >> 32) + res[1] + (res[2] >> 32);
+        case 16:
+            return (res[0] >> 32) + (res[0]) + (res[1] >> 32) + res[1] + (res[2] >> 32) + res[2];
+
+    }
+}
+
 
 
 

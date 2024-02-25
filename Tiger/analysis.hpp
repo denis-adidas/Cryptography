@@ -5,7 +5,10 @@
 #include <iostream>
 #include <vector>
 
+
 void secondPreimages();
-void collision();
+uint64_t collision(const std::vector<uint64_t>& randomHashes);
+
+std::string generateRandomString(int length);
 
 #endif //ANALYSIS_HPP
