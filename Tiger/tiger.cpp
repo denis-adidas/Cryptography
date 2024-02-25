@@ -92,7 +92,6 @@ void tiger::tiger_compress(uint64_t *str, uint64_t state[3]) {
 }
 
 tiger::tiger(const char* str, uint64_t length) {
-
     res[0] = 0x0123456789ABCDEFLL;
     res[1] = 0xFEDCBA9876543210LL;
     res[2] = 0xF096A5B4C3B2E187LL;
@@ -106,6 +105,8 @@ tiger::tiger(const char* str, uint64_t length) {
         tiger_compress(reinterpret_cast<uint64_t*>(temp), res);
         str += 8;
     }
+
+    uint64_t i = length % blockSize;
 
     for (size_t j = 0; j < i; j++) {
         temp[j ^ 7] = static_cast<unsigned char>(str[j]);
@@ -128,6 +129,7 @@ tiger::tiger(const char* str, uint64_t length) {
     *reinterpret_cast<uint64_t*>(&temp[56]) = length << 3;
     tiger_compress(reinterpret_cast<uint64_t*>(temp), res);
 }
+
 
 uint64_t* tiger::getRes() {
     return res;

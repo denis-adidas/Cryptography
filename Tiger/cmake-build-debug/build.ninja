@@ -67,6 +67,12 @@ build CMakeFiles/lab04.dir/sboxes.cpp.obj: CXX_COMPILER__lab04_unscanned_Debug D
   OBJECT_DIR = CMakeFiles\lab04.dir
   OBJECT_FILE_DIR = CMakeFiles\lab04.dir
 
+build CMakeFiles/lab04.dir/analysis.cpp.obj: CXX_COMPILER__lab04_unscanned_Debug D$:/CLion_projects/crypto/lab04/analysis.cpp || cmake_object_order_depends_target_lab04
+  DEP_FILE = CMakeFiles\lab04.dir\analysis.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\lab04.dir
+  OBJECT_FILE_DIR = CMakeFiles\lab04.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target lab04
@@ -75,7 +81,7 @@ build CMakeFiles/lab04.dir/sboxes.cpp.obj: CXX_COMPILER__lab04_unscanned_Debug D
 #############################################
 # Link the executable lab04.exe
 
-build lab04.exe: CXX_EXECUTABLE_LINKER__lab04_Debug CMakeFiles/lab04.dir/main.cpp.obj CMakeFiles/lab04.dir/tiger.cpp.obj CMakeFiles/lab04.dir/sboxes.cpp.obj
+build lab04.exe: CXX_EXECUTABLE_LINKER__lab04_Debug CMakeFiles/lab04.dir/main.cpp.obj CMakeFiles/lab04.dir/tiger.cpp.obj CMakeFiles/lab04.dir/sboxes.cpp.obj CMakeFiles/lab04.dir/analysis.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\lab04.dir

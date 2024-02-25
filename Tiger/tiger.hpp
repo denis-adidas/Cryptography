@@ -30,7 +30,7 @@ private:
     uint64_t aa{}, bb{}, cc{};
     uint64_t a{}, b{}, c{}, x{}, tmpa{};
     int pass_no{};
-    uint64_t i, j{};
+    uint64_t i{}, j{};
 };
 
 
