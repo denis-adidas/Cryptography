@@ -26,6 +26,7 @@ void cypherAnalysis() {
                 uint64_t newHash = t.getHash(bits);
                 if (h == newHash) {
                     steps++;
+                    randomHashes.emplace_back(newHash);
                     break;
                 }
                 randomHashes.emplace_back(newHash);
