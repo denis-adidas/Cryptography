@@ -3,8 +3,6 @@
 static const std::vector<std::string> passwords = {"", "abc", "Tiger"};
 static std::vector<uint64_t> passwordsHash;
 static const std::vector<uint32_t> hashBits = {8, 10, 12, 14, 16};
-static std::vector<uint64_t> avgSecondPreimagesValue;
-static std::vector<uint64_t> avgCollisionValue;
 
 
 void cypherAnalysis() {

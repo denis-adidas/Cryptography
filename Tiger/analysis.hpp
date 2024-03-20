@@ -7,6 +7,7 @@
 
 
 void secondPreimages();
+void cypherAnalysis();
 uint64_t collision(const std::vector<uint64_t>& randomHashes);
 
 std::string generateRandomString(int length);
