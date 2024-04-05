@@ -11,18 +11,20 @@
 class RSA {
 public:
     RSA();
-    std::pair<uint32_t, uint32_t> encrypt();
-    std::pair<uint32_t, uint32_t> decrypt();
+    uint64_t encrypt();
+    uint64_t decrypt();
     void signature();
 private:
-    std::pair<uint32_t, uint32_t> generateRandomNumbers();
-    uint64_t eulerFunction();
-    bool isPrime();
+    uint64_t generateRandomNumbers();
+    bool isPrime(uint64_t n);
+    uint64_t findD();
 private:
     uint32_t exp;
     uint32_t n;
     uint32_t d;
     uint64_t m;
+    uint64_t k;
+    uint64_t eulerFunction;
     std::pair<uint32_t, uint32_t> pubKey;
     std::pair<uint32_t, uint32_t> secretKey;
 };
