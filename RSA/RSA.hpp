@@ -17,7 +17,9 @@ public:
 private:
     uint64_t generateRandomNumbers();
     bool isPrime(uint64_t n);
-    uint64_t findD();
+    uint64_t countExp();
+public:
+    static uint64_t findD();
 private:
     uint32_t exp;
     uint32_t n;
