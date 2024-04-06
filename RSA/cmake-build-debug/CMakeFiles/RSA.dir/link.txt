@@ -1,1 +1,3 @@
-/Library/Developer/CommandLineTools/usr/bin/c++ -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/RSA.dir/main.cpp.o CMakeFiles/RSA.dir/RSA.cpp.o -o RSA 
+C:\Users\den_p\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E rm -f CMakeFiles\RSA.dir/objects.a
+C:\MinGW\MinGW\bin\ar.exe qc CMakeFiles\RSA.dir/objects.a @CMakeFiles\RSA.dir\objects1.rsp
+C:\MinGW\MinGW\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\RSA.dir/objects.a -Wl,--no-whole-archive -o RSA.exe -Wl,--out-implib,libRSA.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\RSA.dir\linkLibs.rsp

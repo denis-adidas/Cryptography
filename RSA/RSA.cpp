@@ -8,6 +8,8 @@
 #include <random>
 
 
+
+
 //ADD INIT D E AND OTHER
 RSA::RSA() {
 
@@ -41,7 +43,7 @@ uint64_t RSA::generateRandomNumbers() {
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<uint64_t> distrib(7, std::numeric_limits<uint64_t>::max());
+    std::uniform_int_distribution<uint64_t> distrib(7, 1000);
     uint64_t result = distrib(gen);
 
     while (!isPrime(result)) {
@@ -51,35 +53,57 @@ uint64_t RSA::generateRandomNumbers() {
     return result;
 }
 
-//Extended Euclidean algorithm - need to find d.
-uint64_t RSA::findD() {
-    uint64_t q, r, x1 = 0,
-             x2 = 1, y1 = 1, y2 = 0;
-    uint64_t a = 720;
-    uint64_t b = 691;
-
-    uint64_t x, y;
-    while (b > 0) {
-        q = a / b;
-        r = a - q * b;
-        x = x2 - q * x1;
-        y = y2 - q *y1;
-        a = b;
-        b = r;
-        x2 = x1;
-        x1 = x;
-        y2 = y1;
-        y1 = y;
+uint64_t modPow(uint64_t base, uint64_t exp, uint64_t mod) {
+    uint64_t result = 1;
+    base = base % mod;
+    while (exp > 0) {
+        if (exp & 1)
+            result = (result * base) % mod;
+        exp = exp >> 1;
+        base = (base * base) % mod;
     }
-    return std::min(x2, y2);
+    return result;
 }
 
+//Extended Euclidean algorithm - need to find d.
+uint64_t RSA::gcdExtended(int a, int b, int *x, int *y) {
 
-uint64_t RSA::countExp() {
-    for (int i = 1; i < sqrt(eulerFunction); ++i) {
-        if (eulerFunction % i == 1)
-            return i;
+    if (a == 0) {
+        *x = 0;
+        *y = 1;
+        return b;
     }
+
+    int x1, y1;
+    int gcd = gcdExtended(b % a, a, &x1, &y1);
+
+    *x = y1 - (b / a) * x1;
+    *y = x1;
+
+    return gcd;
+}
+
+uint64_t RSA::findMultiplicativeInverse(int a, int m) {
+    int k = 1;
+    while (true) {
+        if ((1 + k * m) % a == 0)
+            return (1 + k * m) / a;
+        else
+            k++;
+    }
+}
+
+//Need to find coprime with EF
+uint64_t RSA::countExp(uint64_t digital) {
+    uint32_t e = 2;
+    int x, y;
+    while (e < digital) {
+        if (gcdExtended(e, digital, &x, &y) == 1)
+            break;
+        else
+            e++;
+    }
+    return e;
 }
 
 uint64_t RSA::encrypt() {
@@ -95,16 +119,16 @@ uint64_t RSA::encrypt() {
     n = p * q;
     eulerFunction = (p - 1) * (q - 1);
 
-    exp = countExp();
+    exp = countExp(eulerFunction);
 
-    std::cout << "EF: " << eulerFunction << std::endl;
-    std::cout << "Exp: " << exp << std::endl;
+//    std::cout << "EF: " << eulerFunction << std::endl;
+//    std::cout << "Exp: " << exp << std::endl;
 
-    d = eulerFunction - findD();
+    d = findMultiplicativeInverse(exp, eulerFunction);
 
-    std::cout << "d: " << d << std::endl;
-
-    std::cout << "test: " << eulerFunction % (d * exp)  << std::endl;
+//    std::cout << "d: " << d << std::endl;
+//
+//    std::cout << "test: " << (d * exp) % eulerFunction  << std::endl;
 
     pubKey.first = exp;
     pubKey.second = n;
@@ -112,16 +136,15 @@ uint64_t RSA::encrypt() {
     secretKey.first = d;
     secretKey.second = n;
 
-    k = static_cast<uint64_t>(std::pow(m, pubKey.first)) % pubKey.second;
+    k = modPow(m, pubKey.first, pubKey.second);
 
-    std::cout << "K: " << k << std::endl;
+//    std::cout << "K: " << k << std::endl;
 
     return k;
 }
 
 uint64_t RSA::decrypt() {
-    m = secretKey.second % static_cast<uint64_t>(std::pow(k, secretKey.first)) ;
-    return m;
+    return modPow(k, secretKey.first, secretKey.second);
 }
 
 

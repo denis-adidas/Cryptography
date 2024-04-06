@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/denis_adidas/CLionProjects/RSA/RSA.cpp" "CMakeFiles/RSA.dir/RSA.cpp.o" "gcc" "CMakeFiles/RSA.dir/RSA.cpp.o.d"
-  "/Users/denis_adidas/CLionProjects/RSA/main.cpp" "CMakeFiles/RSA.dir/main.cpp.o" "gcc" "CMakeFiles/RSA.dir/main.cpp.o.d"
+  "D:/CLion_projects/crypto/RSA/RSA.cpp" "CMakeFiles/RSA.dir/RSA.cpp.obj" "gcc" "CMakeFiles/RSA.dir/RSA.cpp.obj.d"
+  "D:/CLion_projects/crypto/RSA/main.cpp" "CMakeFiles/RSA.dir/main.cpp.obj" "gcc" "CMakeFiles/RSA.dir/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

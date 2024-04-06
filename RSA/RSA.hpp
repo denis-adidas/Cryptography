@@ -6,6 +6,9 @@
 #define RSA_HPP
 #include <cstdint>
 #include <tuple>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/miller_rabin.hpp>
+#include <boost/multiprecision/random.hpp>
 
 
 class RSA {
@@ -17,9 +20,9 @@ public:
 private:
     uint64_t generateRandomNumbers();
     bool isPrime(uint64_t n);
-    uint64_t countExp();
-public:
-    static uint64_t findD();
+    uint64_t countExp(uint64_t digital);
+    uint64_t gcdExtended(int a, int b, int *x, int *y);
+    uint64_t findMultiplicativeInverse(int a, int m);
 private:
     uint32_t exp;
     uint32_t n;
