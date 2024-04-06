@@ -2,12 +2,14 @@
 #include "RSA.hpp"
 
 
-
-
 int main() {
-    auto test = RSA();
-    test.encrypt();
-    std::cout << "Res: " << test.decrypt();
-//    std::cout << findMultiplicativeInverse(691, 720);
+    RSA rsa;
+    mp::cpp_int encrypted = rsa.encrypt();
+    std::cout << "Encrypted message: " << encrypted << std::endl;
+    std::cout << "Encryption finished." << std::endl;
+    mp::cpp_int decrypted = rsa.decrypt(encrypted);
+    std::cout << "Decrypted message: " << decrypted << std::endl;
+    std::cout << "Decryption finished." << std::endl;
     return 0;
 }
+

@@ -27,30 +27,18 @@ RSA::RSA() {
 //    m = std::stol(temp);
 }
 
-bool RSA::isPrime(uint64_t n) {
-    if (n <= 1) return false;
-    if (n <= 3) return true;
-    if (n % 2 == 0 || n % 3 == 0) return false;
-
-    for (uint64_t i = 5; i * i <= n; i += 6) {
-        if (n % i == 0 || n % (i + 2) == 0) return false;
-    }
-
-    return true;
+bool RSA::isPrime(mp::cpp_int n) {
+    return mp::miller_rabin_test(n, 25); // Проверяем число на простоту с помощью теста Миллера-Рабина
 }
 
-uint64_t RSA::generateRandomNumbers() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::uniform_int_distribution<uint64_t> distrib(7, 1000);
-    uint64_t result = distrib(gen);
-
-    while (!isPrime(result)) {
-        result = distrib(gen);
-    }
-
-    return result;
+mp::cpp_int RSA::generateRandomNumbers() {
+    mp::cpp_int prime;
+    boost_swap_impl::random_device rng;
+    boost::random::uniform_int_distribution<mp::cpp_int> distrib(100, 999999999);
+    do {
+        prime = distrib(rng);
+    } while (!isPrime(prime));
+    return prime;
 }
 
 uint64_t modPow(uint64_t base, uint64_t exp, uint64_t mod) {
@@ -64,87 +52,63 @@ uint64_t modPow(uint64_t base, uint64_t exp, uint64_t mod) {
     }
     return result;
 }
+mp::cpp_int RSA::modInverse(mp::cpp_int a, mp::cpp_int m) {
+    mp::cpp_int a_mp = a;
+    mp::cpp_int m_mp = m;
+    mp::cpp_int x, y;
+    mp::cpp_int gcd = extended_gcd(a_mp, m_mp, x, y);
 
-//Extended Euclidean algorithm - need to find d.
-uint64_t RSA::gcdExtended(int a, int b, int *x, int *y) {
+    if (gcd != 1) {
+        std::cerr << "Error: No inverse exists for given arguments." << std::endl;
+        return 0; // Возвращаем 0 в случае ошибки
+    }
 
+    // Если x отрицательно, добавляем m, чтобы получить положительное число
+    if (x < 0) {
+        x += m_mp;
+    }
+
+    return x.convert_to<uint64_t>();
+}
+
+mp::cpp_int RSA::extended_gcd(mp::cpp_int a, mp::cpp_int b, mp::cpp_int &x, mp::cpp_int &y) {
     if (a == 0) {
-        *x = 0;
-        *y = 1;
+        x = 0;
+        y = 1;
         return b;
     }
 
-    int x1, y1;
-    int gcd = gcdExtended(b % a, a, &x1, &y1);
+    mp::cpp_int x1, y1;
+    mp::cpp_int gcd = extended_gcd(b % a, a, x1, y1);
 
-    *x = y1 - (b / a) * x1;
-    *y = x1;
+    x = y1 - (b / a) * x1;
+    y = x1;
 
     return gcd;
 }
 
-uint64_t RSA::findMultiplicativeInverse(int a, int m) {
-    int k = 1;
-    while (true) {
-        if ((1 + k * m) % a == 0)
-            return (1 + k * m) / a;
-        else
-            k++;
-    }
+mp::cpp_int RSA::encrypt() {
+        mp::cpp_int p = generateRandomNumbers();
+        mp::cpp_int q = generateRandomNumbers();
+
+        n = p * q;
+        eulerFunction = (p - 1) * (q - 1);
+
+        exp = 3;
+
+        d = modInverse(exp, eulerFunction);
+
+        pubKey.first = exp;
+        pubKey.second = n;
+
+        secretKey.first = d;
+        secretKey.second = n;
+
+        return mp::powm(m, exp, n); // Шифруем сообщение
 }
 
-//Need to find coprime with EF
-uint64_t RSA::countExp(uint64_t digital) {
-    uint32_t e = 2;
-    int x, y;
-    while (e < digital) {
-        if (gcdExtended(e, digital, &x, &y) == 1)
-            break;
-        else
-            e++;
-    }
-    return e;
-}
-
-uint64_t RSA::encrypt() {
-
-//    std::cout << '0' << std::endl;
-
-    uint64_t p = generateRandomNumbers();
-    uint64_t q = generateRandomNumbers();
-
-    std::cout << "P: " << p << std::endl;
-    std::cout << "q: " << q << std::endl;
-
-    n = p * q;
-    eulerFunction = (p - 1) * (q - 1);
-
-    exp = countExp(eulerFunction);
-
-//    std::cout << "EF: " << eulerFunction << std::endl;
-//    std::cout << "Exp: " << exp << std::endl;
-
-    d = findMultiplicativeInverse(exp, eulerFunction);
-
-//    std::cout << "d: " << d << std::endl;
-//
-//    std::cout << "test: " << (d * exp) % eulerFunction  << std::endl;
-
-    pubKey.first = exp;
-    pubKey.second = n;
-
-    secretKey.first = d;
-    secretKey.second = n;
-
-    k = modPow(m, pubKey.first, pubKey.second);
-
-//    std::cout << "K: " << k << std::endl;
-
-    return k;
-}
-
-uint64_t RSA::decrypt() {
-    return modPow(k, secretKey.first, secretKey.second);
+mp::cpp_int RSA::decrypt(mp::cpp_int encrypted) {
+    return mp::powm(encrypted, d, n); // Расшифровываем сообщение
 }
 
 

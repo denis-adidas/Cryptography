@@ -10,28 +10,28 @@
 #include <boost/multiprecision/miller_rabin.hpp>
 #include <boost/multiprecision/random.hpp>
 
+namespace mp = boost::multiprecision;
 
 class RSA {
 public:
     RSA();
-    uint64_t encrypt();
-    uint64_t decrypt();
+    mp::cpp_int encrypt();
+    mp::cpp_int decrypt(mp::cpp_int encrypted);
     void signature();
 private:
-    uint64_t generateRandomNumbers();
-    bool isPrime(uint64_t n);
-    uint64_t countExp(uint64_t digital);
-    uint64_t gcdExtended(int a, int b, int *x, int *y);
-    uint64_t findMultiplicativeInverse(int a, int m);
+    mp::cpp_int generateRandomNumbers();
+    bool isPrime(mp::cpp_int  n);
+    mp::cpp_int modInverse(mp::cpp_int a, mp::cpp_int m);
+    mp::cpp_int extended_gcd(mp::cpp_int a, mp::cpp_int b, mp::cpp_int &x, mp::cpp_int &y);
 private:
-    uint32_t exp;
-    uint32_t n;
-    uint32_t d;
-    uint64_t m;
-    uint64_t k;
-    uint64_t eulerFunction;
-    std::pair<uint32_t, uint32_t> pubKey;
-    std::pair<uint32_t, uint32_t> secretKey;
+    mp::cpp_int exp;
+    mp::cpp_int n;
+    mp::cpp_int d;
+    mp::cpp_int m;
+    mp::cpp_int k;
+    mp::cpp_int eulerFunction;
+    std::pair<mp::cpp_int, mp::cpp_int> pubKey;
+    std::pair<mp::cpp_int, mp::cpp_int> secretKey;
 };
 
 

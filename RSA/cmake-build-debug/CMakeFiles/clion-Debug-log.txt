@@ -26,7 +26,6 @@ Call Stack (most recent call first):
   CMakeLists.txt:6 (find_package)
 
 
--- Found Boost: c:/mingw/mingw/include/ (found version "1.84.0") found components: system filesystem 
--- Configuring done (0.2s)
+-- Configuring done (0.1s)
 -- Generating done (0.0s)
 -- Build files have been written to: D:/CLion_projects/crypto/RSA/cmake-build-debug
