@@ -41,17 +41,6 @@ mp::cpp_int RSA::generateRandomNumbers() {
     return prime;
 }
 
-uint64_t modPow(uint64_t base, uint64_t exp, uint64_t mod) {
-    uint64_t result = 1;
-    base = base % mod;
-    while (exp > 0) {
-        if (exp & 1)
-            result = (result * base) % mod;
-        exp = exp >> 1;
-        base = (base * base) % mod;
-    }
-    return result;
-}
 mp::cpp_int RSA::modInverse(mp::cpp_int a, mp::cpp_int m) {
     mp::cpp_int a_mp = a;
     mp::cpp_int m_mp = m;
@@ -60,10 +49,9 @@ mp::cpp_int RSA::modInverse(mp::cpp_int a, mp::cpp_int m) {
 
     if (gcd != 1) {
         std::cerr << "Error: No inverse exists for given arguments." << std::endl;
-        return 0; // Возвращаем 0 в случае ошибки
+        return 0;
     }
 
-    // Если x отрицательно, добавляем m, чтобы получить положительное число
     if (x < 0) {
         x += m_mp;
     }
@@ -94,9 +82,18 @@ mp::cpp_int RSA::encrypt() {
         n = p * q;
         eulerFunction = (p - 1) * (q - 1);
 
-        exp = 3;
+        exp = 7;
 
-        d = modInverse(exp, eulerFunction);
+        while ((d = modInverse(exp, eulerFunction)) == 0) {
+            p = generateRandomNumbers();
+            q = generateRandomNumbers();
+
+            n = p * q;
+            eulerFunction = (p - 1) * (q - 1);
+
+            d = modInverse(exp, eulerFunction);
+        }
+
 
         pubKey.first = exp;
         pubKey.second = n;
@@ -104,11 +101,11 @@ mp::cpp_int RSA::encrypt() {
         secretKey.first = d;
         secretKey.second = n;
 
-        return mp::powm(m, exp, n); // Шифруем сообщение
+        return mp::powm(m, exp, n);
 }
 
 mp::cpp_int RSA::decrypt(mp::cpp_int encrypted) {
-    return mp::powm(encrypted, d, n); // Расшифровываем сообщение
+    return mp::powm(encrypted, d, n);
 }
 
 
