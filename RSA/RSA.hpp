@@ -20,6 +20,7 @@ public:
     mp::cpp_int encrypt(const mp::cpp_int& num);
     mp::cpp_int decrypt(const mp::cpp_int& encrypted);
     std::vector<mp::cpp_int> decryptSignature(const std::vector<mp::cpp_int>& signature);
+    std::vector<mp::cpp_int> blindAttack(const mp::cpp_int& encrypted);
     std::vector<mp::cpp_int> signature();
 private:
     mp::cpp_int generateRandomNumbers();

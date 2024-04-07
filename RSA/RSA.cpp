@@ -147,7 +147,6 @@ std::vector<mp::cpp_int> RSA::signature() {
 
     for (auto c : hash) {
         result.emplace_back(encrypt(static_cast<mp::cpp_int>(c)));
-//        printf("%d", static_cast<int>(c));
     }
     return result;
 }
@@ -165,33 +164,20 @@ std::vector<mp::cpp_int> RSA::decryptSignature(const std::vector<mp::cpp_int>& s
     return decryptedSignature;
 }
 
+std::vector<mp::cpp_int> RSA::blindAttack(const mp::cpp_int& encrypted) {
+    std::vector<mp::cpp_int> forgedSignatures;
 
+    if (pubKey.first >= 3 && pubKey.first < pubKey.second && encrypted < pubKey.second) {
 
+        mp::cpp_int s = 123;
+        mp::cpp_int signature = mp::powm(s, pubKey.first, pubKey.second);
+        mp::cpp_int decodedSignature = mp::powm(signature, modInverse(s, pubKey.second), pubKey.second);
 
+        mp::cpp_int message = (decodedSignature * encrypted) % pubKey.second;
 
+        forgedSignatures.push_back(signature);
+        forgedSignatures.push_back(message);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return forgedSignatures;
+}

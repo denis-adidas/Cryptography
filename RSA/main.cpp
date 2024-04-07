@@ -18,6 +18,7 @@ int main() {
     //    auto hash = sha2::sha224(ptr, strlen(text));
 
     RSA rsa;
+
     auto hash = rsa.signature();
 
     std::cout << hash.size() << std::endl;
@@ -25,6 +26,13 @@ int main() {
     for (const auto& c : hash) {
         std::cout << c << ' ';
     }
+    std::cout << std::endl;
+    
+    mp::cpp_int encrypted = rsa.encrypt();
+    for( auto c : rsa.blindAttack(encrypted)) {
+        std::cout << c << ' ';
+    }
+
     return 0;
 }
 
