@@ -48,7 +48,6 @@ mp::cpp_int RSA::modInverse(mp::cpp_int a, mp::cpp_int m) {
     mp::cpp_int gcd = extended_gcd(a_mp, m_mp, x, y);
 
     if (gcd != 1) {
-        std::cerr << "Error: No inverse exists for given arguments." << std::endl;
         return 0;
     }
 
@@ -104,13 +103,67 @@ mp::cpp_int RSA::encrypt() {
         return mp::powm(m, exp, n);
 }
 
-mp::cpp_int RSA::decrypt(mp::cpp_int encrypted) {
+mp::cpp_int RSA::encrypt(const mp::cpp_int& num) {
+    m = num;
+    mp::cpp_int p = generateRandomNumbers();
+    mp::cpp_int q = generateRandomNumbers();
+
+    n = p * q;
+    eulerFunction = (p - 1) * (q - 1);
+
+    exp = 7;
+
+    while ((d = modInverse(exp, eulerFunction)) == 0) {
+        p = generateRandomNumbers();
+        q = generateRandomNumbers();
+
+        n = p * q;
+        eulerFunction = (p - 1) * (q - 1);
+
+        d = modInverse(exp, eulerFunction);
+    }
+
+
+    pubKey.first = exp;
+    pubKey.second = n;
+
+    secretKey.first = d;
+    secretKey.second = n;
+
+    return mp::powm(num, exp, n);
+}
+
+mp::cpp_int RSA::decrypt(const mp::cpp_int& encrypted) {
     return mp::powm(encrypted, d, n);
 }
 
+std::vector<mp::cpp_int> RSA::signature() {
+    std::vector<mp::cpp_int> result;
+
+    std::string str = boost::multiprecision::to_string(m);
+    const char* const text = str.c_str();
+    auto ptr = reinterpret_cast<const uint8_t*>(text);
+    auto hash = sha2::sha224(ptr, strlen(text));
+
+    for (auto c : hash) {
+        result.emplace_back(encrypt(static_cast<mp::cpp_int>(c)));
+//        printf("%d", static_cast<int>(c));
+    }
+    return result;
+}
 
 
+std::vector<mp::cpp_int> RSA::decryptSignature(const std::vector<mp::cpp_int>& signature) {
+    std::vector<mp::cpp_int> decryptedSignature;
 
+    for (const auto& signature_part : signature) {
+        mp::cpp_int decrypted_part = decrypt(signature_part);
+        decryptedSignature.push_back(decrypted_part);
+    }
+
+
+    return decryptedSignature;
+}
 
 
 
